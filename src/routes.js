@@ -1,9 +1,13 @@
 import express from 'express';
+import { categoriesFromDatabase } from './lib/db.js';
 
 export const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.render('index', { title: 'Forsíða' });
+router.get('/', async (req, res) => {
+  const categories = await categoriesFromDatabase();
+
+  console.log(categories);
+  res.render('index', { title: 'Forsíða', categories });
 });
 
 router.get('/spurningar/:category', (req, res) => {

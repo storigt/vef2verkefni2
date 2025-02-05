@@ -4,7 +4,6 @@ import { router } from './routes.js';
 const app = express();
 
 const viewsPath = new URL('./views', import.meta.url).pathname;
-console.log('viewsPath :>> ', viewsPath);
 app.set('views', viewsPath);
 app.set('view engine', 'ejs');
 
