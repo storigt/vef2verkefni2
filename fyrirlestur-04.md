@@ -6,6 +6,7 @@ Planið í dag:
 
 fyrirlestur 1: 15-15:40
 
+- Uppsetning á zoom on svona
 - Verkefni 1
 - Spurningar
 
@@ -22,8 +23,10 @@ fyrirlestur 3: 16:40-17:20
 
 Spurningar!
 
-- [ ] hvað með einstaklings fyrri skil
-- [ ] Þarf að gera ráð fyrir mobile viewportum þegar kemur að útlitskröfum?
-- [ ] slack aðgangur
-- [ ] GitHub Actions virkar
-- [ ] build með vite
+- [x] hvað með einstaklings fyrri skil
+- [x] Þarf að gera ráð fyrir mobile viewportum þegar kemur að útlitskröfum?
+- [x] slack aðgangur
+- [x] GitHub Actions virkar
+- [x] build með vite
+- [x] gitignore á dist
+- [ ] vite í v1 til upphækkunar
