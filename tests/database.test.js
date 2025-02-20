@@ -58,4 +58,43 @@ describe('Database Tests', () => {
     expect(questionResult.rows.length).toBe(1);
     expect(questionResult.rows[0].id).toBeDefined();
   });
+
+
+  test('Should fail to insert a category with a short name', async () => {
+    const shortCategory = 'ab';
+
+    // Run query and check if row got inserted
+    await db.query('INSERT INTO categories (name) VALUES ($1) ON CONFLICT (name) DO NOTHING', [shortCategory]);
+
+    // Now check if it exists in the database
+    const checkResult = await db.query('SELECT * FROM categories WHERE name = $1', [shortCategory]);
+
+    expect(checkResult.rows.length).toBe(0);
+  });
+
+  test('Should fail to insert a question with fewer than 5 characters', async () => {
+    const categoryName = 'Test Category for Invalid Question';
+    const invalidQuestion = 'Hi?';
+
+    // Ensure category exists
+    const categoryResult = await db.query(
+      'INSERT INTO categories (name) VALUES ($1) ON CONFLICT (name) DO NOTHING RETURNING id',
+      [categoryName]
+    );
+
+    if (!categoryResult.rows.length) {
+      const existingCategory = await db.query('SELECT id FROM categories WHERE name = $1', [categoryName]);
+      categoryResult.rows[0] = existingCategory.rows[0];
+    }
+
+    const categoryId = categoryResult.rows[0].id;
+
+    // Attempt to insert invalid question
+    await db.query('INSERT INTO questions (category_id, question) VALUES ($1, $2) ON CONFLICT (question) DO NOTHING', [categoryId, invalidQuestion]);
+
+    // Now check if it exists in the database
+    const checkResult = await db.query('SELECT * FROM questions WHERE question = $1', [invalidQuestion]);
+
+    expect(checkResult.rows.length).toBe(0);
+  });
 });
