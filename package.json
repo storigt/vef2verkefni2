@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "node --env-file=.env --watch-path ./src src/server.js",
-    "setup": "node ./src/setup.js",
+    "setup": "node src/setup.js && node src/loadData.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --env=node",
     "lint": "eslint ."
   },
