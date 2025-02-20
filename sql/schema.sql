@@ -1,5 +1,19 @@
 CREATE TABLE IF NOT EXISTS public.categories (
-  id serial primary key,
-  name varchar(64) not null unique,
-  created timestamp with time zone not null default current_timestamp
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(64) NOT NULL UNIQUE CHECK (LENGTH(name) >= 3),
+  created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS public.questions (
+  id SERIAL PRIMARY KEY,
+  category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE,
+  question TEXT NOT NULL CHECK (LENGTH(question) >= 5),
+  created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS public.answers (
+  id SERIAL PRIMARY KEY,
+  question_id INTEGER REFERENCES questions(id) ON DELETE CASCADE,
+  answer TEXT NOT NULL CHECK (LENGTH(answer) >= 1),
+  is_correct BOOLEAN NOT NULL DEFAULT FALSE
 );

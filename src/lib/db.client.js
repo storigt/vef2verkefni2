@@ -9,7 +9,7 @@ export class Database {
   /**
    * Create a new database connection.
    * @param {string} connectionString
-   * @param {import('./logger').Logger} logger
+   * @param {import('./logger.js').Logger} logger
    */
   constructor(connectionString, logger) {
     this.connectionString = connectionString;
@@ -70,9 +70,9 @@ export class Database {
 
   /**
    * Run a query on the database.
-   * @param {string} query SQL query.
-   * @param {Array<string>} values Parameters for the query.
-   * @returns {Promise<pg.QueryResult | null>} Result of the query.
+   * @param {string} query
+   * @param {Array<string>} values
+   * @returns {Promise<pg.QueryResult | null>}
    */
   async query(query, values = []) {
     const client = await this.connect();

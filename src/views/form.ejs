@@ -1,21 +1,113 @@
 <%- include('header') -%>
 
-<form method="post" action="/form">
+<% if (errorMessage) { %>
+  <p><%= errorMessage %></p>
+<% } %>
 
-  <label for="name">Heiti flokks:</label>
-  <input type="text" id="name" name="name">
-  <input type="number" id="name" name="number">
-  <label>rétt svar #1: <input type="radio" id="name" name="rett_svar" value="1"></label>
-  <label>rétt svar #2: <input type="radio" id="name" name="rett_svar" value="1"></label>
-  <label>rétt svar #3: <input type="radio" id="name" name="rett_svar" value="1"></label>
 
-  <input type="checkbox" id="name" name="checkbox">
-  <select>
-    <option>foo</option>
-    <option value="foobar">bar</option>
-  </select>
-  <textarea name="text"></textarea>
-  <button type="submit">Búa til flokk</button>
+<form method="post" action="/form" autocomplete="off" id="questionForm">
+  <fieldset>
+    <legend>Veldu hvað þú vilt bæta við:</legend>
+    <label>
+      <input type="radio" name="type" value="category" checked> Bæta við flokk
+    </label>
+    <label>
+      <input type="radio" name="type" value="question"> Bæta við spurningu
+    </label>
+  </fieldset>
+
+  <!-- Category Section -->
+  <div id="category-section">
+    <label for="category-name">Heiti flokks:</label>
+    <input type="text" id="category-name" name="category_name" minlength="3">
+  </div>
+
+  <!-- Question Section -->
+  <div id="question-section" style="display: none;">
+    <label for="category-id">Veldu flokk:</label>
+    <select id="category-id" name="category_id">
+      <% categories.forEach(category => { %>
+        <option value="<%= category.id %>"><%= category.name %></option>
+      <% }) %>
+    </select>
+
+    <label for="question-text">Spurning:</label>
+    <textarea id="question-text" name="question" minlength="5"></textarea>
+
+    <fieldset>
+      <legend>Svör (veldu eitt sem rétt svar)</legend>
+      <% for (let i = 0; i < 4; i++) { %>
+        <div>
+          <input type="text" name="answers[]" class="answer-input" placeholder="Svar <%= i + 1 %>">
+          <input type="radio" name="correct_answer" value="<%= i %>" class="correct-answer">
+          <label for="answer-<%= i %>">Rétt svar?</label>
+        </div>
+      <% } %>
+    </fieldset>
+  </div>
+
+  <button type="submit" id="submitButton" disabled>Bæta við</button>
 </form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById('questionForm');
+    const categoryRadio = document.querySelector('input[value="category"]');
+    const questionRadio = document.querySelector('input[value="question"]');
+    const categorySection = document.getElementById('category-section');
+    const questionSection = document.getElementById('question-section');
+    const submitButton = document.getElementById('submitButton');
+
+    function validateForm() {
+      if (categoryRadio.checked) {
+        // Validate category name
+        const categoryName = document.getElementById('category-name').value.trim();
+        submitButton.disabled = categoryName.length < 3;
+      } else {
+        // Validate question fields
+        const questionText = document.getElementById('question-text').value.trim();
+        const answerInputs = document.querySelectorAll('.answer-input');
+        const correctAnswerSelected = document.querySelector('.correct-answer:checked');
+
+        // Ensure at least one non-empty answer exists
+        const hasValidAnswers = Array.from(answerInputs).some(input => input.value.trim().length > 0);
+
+        submitButton.disabled = !(questionText.length >= 5 && correctAnswerSelected && hasValidAnswers);
+      }
+    }
+
+    function toggleSections() {
+      const isCategory = categoryRadio.checked;
+      categorySection.style.display = isCategory ? 'block' : 'none';
+      questionSection.style.display = isCategory ? 'none' : 'block';
+      validateForm();
+    }
+
+    // Toggle sections on radio change
+    document.querySelectorAll('input[name="type"]').forEach(input => {
+      input.addEventListener('change', toggleSections);
+    });
+
+    // Validate input fields dynamically
+    document.getElementById('category-name').addEventListener('input', validateForm);
+    document.getElementById('question-text').addEventListener('input', validateForm);
+    document.querySelectorAll('.answer-input, .correct-answer').forEach(input => {
+      input.addEventListener('input', validateForm);
+    });
+
+    // Ensure form actually submits
+    form.addEventListener('submit', (event) => {
+      if (submitButton.disabled) {
+        event.preventDefault();
+        console.warn("Submission prevented due to validation failure.");
+      } else {
+        console.log("✅ Form submitted successfully!");
+      }
+    });
+
+    // Initialize state
+    toggleSections();
+  });
+</script>
 
 <%- include('footer') -%>

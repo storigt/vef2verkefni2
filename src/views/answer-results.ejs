@@ -1,0 +1,20 @@
+<%- include('header') -%>
+
+<h2><%= title %> - Niðurstöður</h2>
+
+<ul>
+  <% results.forEach(result => { %>
+    <li>
+      Spurning <%= result.questionId %>:
+      <% if (result.isCorrect) { %>
+        Rétt!
+      <% } else { %>
+        Rangt.
+      <% } %>
+    </li>
+  <% }) %>
+</ul>
+
+<a href="/spurningar/<%= categoryId %>">Reyna aftur</a>
+
+<%- include('footer') -%>

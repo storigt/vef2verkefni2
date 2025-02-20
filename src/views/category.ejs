@@ -1,5 +1,25 @@
 <%- include('header') -%>
 
-spurnigaflokkur!
+<form method="post" action="/spurningar/<%= categoryId %>/svar">
+    <ul>
+    <% questions.forEach(question => { %>
+      <li>
+        <strong><%= question.text %></strong>
+        <ul>
+          <% question.answers.forEach(answer => { %>
+            <li>
+              <label>
+                <input type="radio" name="question-<%= question.id %>" value="<%= answer.id %>" required>
+                <%= answer.text %>
+              </label>
+            </li>
+          <% }) %>
+        </ul>
+      </li>
+    <% }) %>
+  </ul>
+
+  <button type="submit">Senda svör</button>
+</form>
 
 <%- include('footer') -%>

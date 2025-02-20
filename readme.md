@@ -1,3 +1,3 @@
-# vef2-2025 v2 unnið í tíma
+# Verkefni 2
 
-Partur af verkefni 2 unninn í fyrirlestrum 4 og 5.
+ToDo

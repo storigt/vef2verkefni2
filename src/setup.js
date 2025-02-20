@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { readFile } from 'node:fs/promises';
 import { Database } from './lib/db.client.js';
 import { environment } from './lib/environment.js';
@@ -13,6 +14,9 @@ const INSERT_FILE = './sql/insert.sql';
  * @returns {Promise<boolean>}
  */
 async function setupDbFromFiles(db, logger) {
+
+  await db.query('DELETE FROM categories');
+  
   const dropScript = await readFile(DROP_SCHEMA_FILE);
   const createScript = await readFile(SCHEMA_FILE);
   const insertScript = await readFile(INSERT_FILE);

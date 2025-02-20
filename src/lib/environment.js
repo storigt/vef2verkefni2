@@ -1,4 +1,4 @@
-/** Default port if none provided. */
+/** Default port */
 const DEFAULT_PORT = 3000;
 
 /**
