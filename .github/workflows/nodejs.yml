@@ -31,14 +31,21 @@ jobs:
         with:
           node-version: 22
 
+      - name: Create .env file
+        run: |
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
+
+      - name: Wait for PostgreSQL to be ready
+        run: until pg_isready -h localhost -p 5432; do sleep 1; done
+
       - name: Install dependencies
         run: npm install
 
+      - name: Set DATABASE_URL for tests
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+
       - name: Set up database
         run: npm run setup
-
-      - name: Set DATABASE_URL for tests
-        run: echo "DATABASE_URL=postgres://gunnarerlendsson@localhost:5432/vef2-2025" >> $GITHUB_ENV
 
       - name: Lint
         run: npm run lint
